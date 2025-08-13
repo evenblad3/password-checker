@@ -1,21 +1,25 @@
 #include "PasswordCheck.h"
-#include <string>
-#include <algorithm>
-#include <vector>
-#include <cctype>
+
+PasswordCheck::PasswordCheck(){
+    loadRecentPasswords();
+}
+
+PasswordCheck::~PasswordCheck(){
+    saveRecentPasswords();
+}
 
 bool PasswordCheck::sizeCheck(std::string password){
-    if(password.size() >= 10){
-        return true;
-    }
-    return false;
+    return password.size() >= 10;
+        
 }
+
 void PasswordCheck::enterNewPassword(std::string password){
     recentPasswords.push_back(password);
     if(recentPasswords.size() > 5){
         recentPasswords.erase(recentPasswords.begin());
     }
 }
+
 bool PasswordCheck::upperCheck(std::string password){
     int i = 0;
     int upperCount = 0;
@@ -25,12 +29,10 @@ bool PasswordCheck::upperCheck(std::string password){
         }
         i += 1;
     }
-    if(upperCount >= 2){
-        return true;
-    }
-    return false;
+    return upperCount >= 2;
 }
-bool PasswordCheck::lowerCheck(std::string password){
+
+bool PasswordCheck::lowerCheck(std::string password) {
     int i = 0;
     int lowerCount = 0;
     while(i < password.size()){
@@ -39,11 +41,9 @@ bool PasswordCheck::lowerCheck(std::string password){
         }
         i += 1;
     }
-    if(lowerCount >= 2){
-        return true;
-    }
-    return false;
+    return lowerCount >= 2;
 }
+
 bool PasswordCheck::numCheck(std::string password){
     int i = 0;
     int numberCount = 0;
@@ -53,11 +53,9 @@ bool PasswordCheck::numCheck(std::string password){
         }
         i += 1;
     }
-    if(numberCount >= 2){
-        return true;
-    }
-    return false;
+    return numberCount >= 2;
 }
+
 bool PasswordCheck::symbolCheck(std::string password){
     int i = 0; 
     int symbolCount = 0;
@@ -67,17 +65,43 @@ bool PasswordCheck::symbolCheck(std::string password){
         }
         i += 1;
     }
-        if(symbolCount >= 2){
-            return true;
-        }
-        return false;
+    return symbolCount >= 2;
 }
+
 bool PasswordCheck::uniquePassword(std::string password){
     if(std::count(recentPasswords.begin(), recentPasswords.end(), password) > 0){
         return false;
     }
     return true;
 }
+
+void PasswordCheck::printRecentPasswords(std::vector<std::string> passwords){
+    if (!recentPasswords.empty()){
+        std::cout << "Your recent most passwords are:\n";
+        for (const auto& password : recentPasswords){
+            std::cout << "=> " << password << "\n";
+        }
+    }
+}
+
 const std::vector<std::string>& PasswordCheck::getRecentPasswords() const {
     return recentPasswords;
+}
+
+void PasswordCheck::loadRecentPasswords(){
+    std::ifstream file("recentPasswords.txt", std::ios::out | std::ios::app);
+    if (!file){
+        std::cout << "recentPasswords.txt not found.\n";
+    } else {
+        std::string password;
+        while (std::getline(file, password)) recentPasswords.push_back(password);
+    }
+}
+
+void PasswordCheck::saveRecentPasswords(){
+    std::ofstream file("recentPasswords.txt");
+    for (const auto& password : recentPasswords){
+        file << password << std::endl;
+    }
+    file.close();
 }

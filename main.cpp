@@ -6,19 +6,23 @@
 int main(){
     PasswordCheck thePassword;
     std::string myPassword;
-    std::cout << "Welcome to our website! Please create a password. It must be at least ten characters long with at least two uppercase letters, at least two lowercase letters, at least two digits, and at least two special characters. It also must be different from your five previous passwords." << std::endl;
-    std::getline(std::cin, myPassword);  
+    std::cout << "Welcome to our website! Please create a password.\n";
+    std::cout << "Requirements: \n";
+    std::cout << "- At least ten characters long\n";
+    std::cout << "- At least two uppercase letters\n";
+    std::cout << "- At least two lowercase letters\n";
+    std::cout << "- At least two digits\n";
+    std::cout << "- At least two special characters\n";
+    std::cout << "- It also must be different from your five previous passwords.\n\n";
+    std::cout << "Please enter your password: ";
+    std::getline(std::cin, myPassword);
+    std::cout << std::endl;
     int numOfPasses = 0;
 
-    
-    std::cout << "Your recent passwords are (includes current password): ";
     const std::vector<std::string>& recentPasswords = thePassword.getRecentPasswords();
-    for (const auto& password : recentPasswords){
-        std::cout << password << "    ";
-    }
-    std::cout << std::endl;
-    std::cout << "If there are no passwords listed, that means you have no recent passwords." << std::endl;
+    thePassword.printRecentPasswords(recentPasswords);
 
+    std::cout << std::endl;
     std::cout << "Password length requirement: ";
     if(thePassword.sizeCheck(myPassword)){
         std::cout << "Pass!" << std::endl;
@@ -75,7 +79,7 @@ int main(){
 
     if(numOfPasses == 6){
         thePassword.enterNewPassword(myPassword);
-        std::cout << "All requirements passed. This is now your new password!" << std::endl;
+        std::cout << "\nAll requirements passed. This is now your new password!" << std::endl;
     }
     else{
         std::cout << "The entered password does not pass all requirements." << std::endl;
